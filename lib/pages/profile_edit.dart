@@ -1,41 +1,34 @@
 import 'package:flutter/material.dart';
+
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
-import '../components/buttom_nav_bar.dart';
+import 'package:myapp/pages/profile_screen.dart';
 import '../components/my_api.dart';
 
-class EditFix extends StatefulWidget {
-  final id;
-  const EditFix({super.key, required this.id});
+class ProfileEdit extends StatefulWidget {
+  const ProfileEdit({super.key});
 
   @override
-  State<EditFix> createState() => _EditFixState();
+  State<ProfileEdit> createState() => _ProfileEditState();
 }
 
-class _EditFixState extends State<EditFix> {
-  final _ndevice = TextEditingController();
-  final _brand = TextEditingController();
-  final _problem = TextEditingController();
-  final _date = TextEditingController();
-  final _time = TextEditingController();
-  final _detail = TextEditingController();
+class _ProfileEditState extends State<ProfileEdit> {
+  final _username = TextEditingController();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  final _name = TextEditingController();
+  final _lastname = TextEditingController();
+  final _tell = TextEditingController();
+  final _address = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  var ed1;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    ed1 = widget.id;
-    print(ed1);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit"),
+        title: Text("Edit Profile"),
         backgroundColor: Color.fromRGBO(11, 74, 126, 1),
       ),
       body: SingleChildScrollView(
@@ -48,10 +41,9 @@ class _EditFixState extends State<EditFix> {
                 Padding(
                   padding: EdgeInsets.all(25),
                   child: TextFormField(
-                    controller: _ndevice,
+                    controller: _username,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Name Device : "),
+                        border: OutlineInputBorder(), labelText: "Username : "),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'กรุณากรอกข้อมูล'; // Error message if data is empty
@@ -63,9 +55,9 @@ class _EditFixState extends State<EditFix> {
                 Padding(
                   padding: EdgeInsets.all(25),
                   child: TextFormField(
-                    controller: _brand,
+                    controller: _email,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: "Brand : "),
+                        border: OutlineInputBorder(), labelText: "Email : "),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'กรุณากรอกข้อมูล'; // Error message if data is empty
@@ -77,9 +69,9 @@ class _EditFixState extends State<EditFix> {
                 Padding(
                   padding: EdgeInsets.all(25),
                   child: TextFormField(
-                    controller: _problem,
+                    controller: _password,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: "Problem : "),
+                        border: OutlineInputBorder(), labelText: "Password : "),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'กรุณากรอกข้อมูล'; // Error message if data is empty
@@ -91,10 +83,9 @@ class _EditFixState extends State<EditFix> {
                 Padding(
                   padding: EdgeInsets.all(25),
                   child: TextFormField(
-                    controller: _date,
+                    controller: _name,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Date : ว/ด/ป"),
+                        border: OutlineInputBorder(), labelText: "Name : "),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'กรุณากรอกข้อมูล'; // Error message if data is empty
@@ -106,9 +97,23 @@ class _EditFixState extends State<EditFix> {
                 Padding(
                   padding: EdgeInsets.all(25),
                   child: TextFormField(
-                    controller: _time,
+                    controller: _lastname,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: "Time : "),
+                        border: OutlineInputBorder(), labelText: "Lastname : "),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกข้อมูล'; // Error message if data is empty
+                      }
+                      return null; // No error
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(25),
+                  child: TextFormField(
+                    controller: _tell,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: "Tell : "),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'กรุณากรอกข้อมูล'; // Error message if data is empty
@@ -121,9 +126,9 @@ class _EditFixState extends State<EditFix> {
                   padding: EdgeInsets.all(25),
                   child: TextFormField(
                     maxLines: 3,
-                    controller: _detail,
+                    controller: _address,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: "Detail : "),
+                        border: OutlineInputBorder(), labelText: "Address : "),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'กรุณากรอกข้อมูล'; // Error message if data is empty
@@ -139,11 +144,11 @@ class _EditFixState extends State<EditFix> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        updatefix();
+                        updateprofile();
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                              title: const Text('Edit Data Fix'),
+                              title: const Text('Edit Data Profile'),
                               content: const Text('แก้ไขเรียบร้อยแล้ว'),
                               actions: <Widget>[
                                 TextButton(
@@ -151,7 +156,7 @@ class _EditFixState extends State<EditFix> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) {
-                                        return buttomBar();
+                                        return ProfileScreen();
                                       },
                                     ),
                                   ),
@@ -170,17 +175,18 @@ class _EditFixState extends State<EditFix> {
     );
   }
 
-  Future updatefix() async {
-    var url = Uri.http(URL(), 'update-fix/${ed1}');
+  Future updateprofile() async {
+    var url = Uri.http(URL(), 'update-profile/${idcus()}');
     Map<String, String> header = {"Content-type": "application/json"};
 
-    String f1 = '"ndevice":"${_ndevice.text}"';
-    String f2 = '"brand":"${_brand.text}"';
-    String f3 = '"problem":"${_problem.text}"';
-    String f4 = '"date":"${_date.text}"';
-    String f5 = '"time":"${_time.text}"';
-    String f6 = '"detail":"${_detail.text}"';
-    String jsondata = '{$f1,$f2,$f3,$f4,$f5,$f6}';
+    String f1 = '"username":"${_username.text}"';
+    String f2 = '"email":"${_email.text}"';
+    String f3 = '"password":"${_password.text}"';
+    String f4 = '"name":"${_name.text}"';
+    String f5 = '"lastname":"${_lastname.text}"';
+    String f6 = '"tell":"${_tell.text}"';
+    String f7 = '"address":"${_address.text}"';
+    String jsondata = '{$f1,$f2,$f3,$f4,$f5,$f6,$f7}';
     var response = await http.put(url, headers: header, body: jsondata);
     print('--------result--------');
     print(response.body);

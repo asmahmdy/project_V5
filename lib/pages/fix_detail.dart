@@ -52,7 +52,7 @@ class _FixDetailState extends State<FixDetail> {
               ),
             ),
             SizedBox(
-              height: 60,
+              height: 30,
             ),
             ElevatedButton(
                 style: const ButtonStyle(

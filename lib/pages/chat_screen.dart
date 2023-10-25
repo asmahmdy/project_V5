@@ -1,127 +1,237 @@
-import 'package:flutter/material.dart';
-import 'dart:async';
-// import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../components/my_api.dart';
+// // import 'package:flutter/material.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+// // import 'package:myapp/components/my_api.dart';
 
-  @override
-  State<ChatScreen> createState() => _ChatScreenState();
-}
+// // import 'dart:async';
+// // import 'dart:convert';
+// // import 'package:http/http.dart' as http;
 
-class _ChatScreenState extends State<ChatScreen> {
-  final _message = TextEditingController();
+// // void main() => runApp(ChatApp());
 
-  // List _msg = [];
+// // class ChatApp extends StatelessWidget {
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     return MaterialApp(
+// //       home: ChatScreen(),
+// //     );
+// //   }
+// // }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+// // class ChatScreen extends StatefulWidget {
+// //   @override
+// //   State createState() => ChatScreenState();
+// // }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Chat"),
-        backgroundColor: Color.fromRGBO(11, 74, 126, 1),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              Container(
-                height: 100,
-                width: 50,
-                decoration: BoxDecoration(color: Colors.white),
-                child: Text("1"),
-              ),
-              Container(
-                height: 100,
-                width: 50,
-                decoration: BoxDecoration(color: Colors.white),
-                child: Text("3"),
-              ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Row(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width - 55,
-                  child: Card(
-                    margin: EdgeInsets.only(left: 8, right: 2, bottom: 8),
-                    color: Color.fromARGB(255, 159, 214, 241),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: TextFormField(
-                      controller: _message,
-                      textAlignVertical: TextAlignVertical.center,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 5,
-                      minLines: 1,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "    Type a message",
-                      ),
-                      // suffixIcon: Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: [
-                      //     IconButton(
-                      //         onPressed: () {},
-                      //         icon: Icon(Icons.attach_file)),
-                      //     IconButton(
-                      //         onPressed: () {},
-                      //         icon: Icon(Icons.camera_alt))
-                      //   ],
-                      // ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5.0),
-                  child: IconButton(
-                    icon: Icon(Icons.send),
-                    onPressed: () {
-                      postmsg();
-                    },
-                    iconSize: 26,
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
+// // class ChatScreenState extends State<ChatScreen> {
+// //   final List<ChatMessage> _messages = [];
+// //   var _textController = TextEditingController();
 
-  Future postmsg() async {
-    // var url = Uri.https('abcd.ngrok.io', '/api/post-todolist');
-    var url = Uri.http(URL(), 'post-msg');
-    Map<String, String> header = {"Content-type": "application/json"};
-    String v1 = '"msg":"${_message.text}"';
-    String v2 = '"idcus" : "${idcus()}"';
-    // int id = 1;
-    // String v2 = '"idcus":"${id}"';
+// //   void _handleSubmitted(String text) {
+// //     _textController.clear();
+// //     ChatMessage message = ChatMessage(
+// //       text: text,
+// //       isUser: true,
+// //     );
+// //     setState(() {
+// //       _messages.insert(0, message);
+// //     });
+// //   }
 
-    String jsondata = '{$v1,$v2}';
-    var response = await http.post(url, headers: header, body: jsondata);
-    print('--------result--------');
-    print(response.body);
-  }
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     return Scaffold(
+// //       appBar: AppBar(
+// //         title: Text('Chat App'),
+// //       ),
+// //       body: Column(
+// //         children: <Widget>[
+// //           Flexible(
+// //             child: ListView.builder(
+// //               padding: EdgeInsets.all(8.0),
+// //               reverse: true,
+// //               itemCount: _messages.length,
+// //               itemBuilder: (_, int index) => _messages[index],
+// //             ),
+// //           ),
+// //           Divider(height: 1.0),
+// //           Container(
+// //             decoration: BoxDecoration(color: Theme.of(context).cardColor),
+// //             child: _buildTextComposer(),
+// //           ),
+// //         ],
+// //       ),
+// //     );
+// //   }
 
-  // Future get_msg() async {
-  //   var url = Uri.http(URL(), 'get-msg/${idcus}');
-  //   var response = await http.get(url);
-  //   var result = json.decode(response.body);
-  //   setState(() {
-  //     _msg = json.decode(result);
-  //   });
-  // }
-}
+// //   Widget _buildTextComposer() {
+// //     return IconTheme(
+// //       data: IconThemeData(color: Theme.of(context).cardColor),
+// //       child: Container(
+// //         margin: const EdgeInsets.symmetric(horizontal: 8.0),
+// //         child: Row(
+// //           children: <Widget>[
+// //             Flexible(
+// //               child: TextField(
+// //                 controller: _textController,
+// //                 decoration:
+// //                     InputDecoration.collapsed(hintText: 'Send a message'),
+// //               ),
+// //             ),
+// //             IconButton(
+// //               icon: Icon(
+// //                 Icons.send,
+// //                 color: Colors.black,
+// //               ),
+// //               onPressed: () {
+// //                 // sendMsg(_textController.text, true);
+// //                 print(_textController);
+// //                 postmsg(_textController.text);
+// //                 _textController.clear();
+// //               },
+// //             ),
+// //           ],
+// //         ),
+// //       ),
+// //     );
+// //   }
+
+// //   Widget sendMsg(String text, bool isUser) {
+// //     return Container(
+// //       margin: const EdgeInsets.symmetric(vertical: 10.0),
+// //       child: Row(
+// //         mainAxisAlignment:
+// //             isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+// //         children: <Widget>[
+// //           if (!isUser) CircleAvatar(), // Add user avatars here
+// //           Flexible(
+// //             child: Container(
+// //               padding: const EdgeInsets.all(8.0),
+// //               decoration: BoxDecoration(
+// //                 color: isUser ? Colors.blue : Colors.grey,
+// //                 borderRadius: BorderRadius.circular(8.0),
+// //               ),
+// //               child: Text(
+// //                 text,
+// //                 style: TextStyle(color: Colors.white),
+// //               ),
+// //             ),
+// //           ),
+// //           // if (isUser) CircleAvatar(), // Add user avatars here
+// //         ],
+// //       ),
+// //     );
+// //   }
+
+// //   Future postmsg(String msg) async {
+// //     // var url = Uri.https('abcd.ngrok.io', '/api/post-todolist');
+// //     var url = Uri.http(URL(), 'post-msg');
+// //     Map<String, String> header = {"Content-type": "application/json"};
+// //     String v1 = '"msg":"${msg}"';
+// //     String v2 = '"idcus" : "${idcus()}"';
+
+// //     String jsondata = '{$v1,$v2}';
+// //     var response = await http.post(url, headers: header, body: jsondata);
+// //     print('--------result--------');
+// //     print(response.body);
+// //   }
+// // }
+
+// // class ChatMessage extends StatelessWidget {
+// //   final String text;
+// //   final bool isUser;
+
+// //   ChatMessage({required this.text, required this.isUser});
+
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     return Container(
+// //       margin: const EdgeInsets.symmetric(vertical: 10.0),
+// //       child: Row(
+// //         mainAxisAlignment:
+// //             isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+// //         children: <Widget>[
+// //           if (!isUser) CircleAvatar(), // Add user avatars here
+// //           Flexible(
+// //             child: Container(
+// //               padding: const EdgeInsets.all(8.0),
+// //               decoration: BoxDecoration(
+// //                 color: isUser ? Colors.blue : Colors.grey,
+// //                 borderRadius: BorderRadius.circular(8.0),
+// //               ),
+// //               child: Text(
+// //                 text,
+// //                 style: TextStyle(color: Colors.white),
+// //               ),
+// //             ),
+// //           ),
+// //           // if (isUser) CircleAvatar(), // Add user avatars here
+// //         ],
+// //       ),
+// //     );
+// //   }
+// // }
+
+// import 'package:flutter/material.dart';
+
+// void main() {
+//   runApp(ChatApp());
+// }
+
+// class ChatApp extends StatefulWidget {
+//   @override
+//   _ChatAppState createState() => _ChatAppState();
+// }
+
+// class _ChatAppState extends State<ChatApp> {
+//   final List<String> messages = [];
+//   final TextEditingController messageController = TextEditingController();
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text('Chat App'),
+//         ),
+//         body: Column(
+//           children: [
+//             Expanded(
+//               child: ListView.builder(
+//                 itemCount: messages.length,
+//                 itemBuilder: (context, index) {
+//                   return ListTile(
+//                     title: Text(messages[index]),
+//                   );
+//                 },
+//               ),
+//             ),
+//             Padding(
+//               padding: const EdgeInsets.all(8.0),
+//               child: Row(
+//                 children: [
+//                   Expanded(
+//                     child: TextField(
+//                       controller: messageController,
+//                       decoration: InputDecoration(labelText: 'Type a message'),
+//                     ),
+//                   ),
+//                   IconButton(
+//                     icon: Icon(Icons.send),
+//                     onPressed: () {
+//                       final message = messageController.text;
+//                       if (message.isNotEmpty) {
+//                         messages.add(message);
+//                         messageController.clear();
+//                         setState(() {});
+//                       }
+//                     },
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

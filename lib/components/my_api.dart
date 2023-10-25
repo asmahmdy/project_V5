@@ -1,5 +1,5 @@
 String URL() {
-  return "172.18.160.237:8000";
+  return "172.18.160.132:8000";
 }
 
 int idcus() {
@@ -7,6 +7,10 @@ int idcus() {
 }
 
 int idfix() {
+  return 1;
+}
+
+int idmsg() {
   return 1;
 }
 

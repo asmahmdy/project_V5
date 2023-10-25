@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:myapp/pages/banking.dart';
+import 'package:myapp/components/buttom_nav_bar.dart';
 import '../components/my_api.dart';
 
 class ConfirmOrder extends StatefulWidget {
@@ -10,25 +9,27 @@ class ConfirmOrder extends StatefulWidget {
   final String image;
   final int sellPrice;
   final int amount;
+  final int idproduct;
   const ConfirmOrder(
       {super.key,
       required this.nproduct,
       required this.image,
       required this.sellPrice,
-      required this.amount});
+      required this.amount,
+      required this.idproduct});
 
   @override
   State<ConfirmOrder> createState() => _ConfirmOrderState();
 }
 
 class _ConfirmOrderState extends State<ConfirmOrder> {
-  List _products = [];
-  var _nproduct, _image, _sellPrice, _amount;
+  var _idpd, _nproduct, _image, _sellPrice, _amount;
   int total = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _idpd = widget.idproduct;
     _nproduct = widget.nproduct;
     _image = widget.image;
     _sellPrice = widget.sellPrice;
@@ -47,11 +48,14 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
             child: ListView(children: [
               Container(
                 child: Row(children: [
-                  Image.network(
-                    "${_image}",
-                    fit: BoxFit.fill,
-                    height: 150,
-                    width: 150,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      "${_image}",
+                      fit: BoxFit.fill,
+                      height: 150,
+                      width: 150,
+                    ),
                   ),
                   Padding(
                       padding: const EdgeInsets.only(
@@ -93,69 +97,105 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 80),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: ElevatedButton.icon(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll<Color>(
-                                Color.fromARGB(255, 3, 68, 121))),
-                        onPressed: () {
-                          post_ctm_order();
-                          showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                                title: const Text('Make Payment'),
-                                content: const Text('กรุณาชำระเงิน'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Banking()));
-                                    },
-                                    child: const Text('OK'),
-                                  ),
-                                ]),
-                          );
-                        },
-                        icon: Icon(
-                          Icons.payment,
-                          color: Colors.white,
-                        ),
-                        label: Text("Confirm"),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ])));
-  }
+              ElevatedButton(
+                  style: const ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll<Color>(
+                        Color.fromARGB(255, 3, 68, 121)),
+                  ),
+                  onPressed: () {
+                    {
+                      post_ctm_order();
 
-  Future getProducts() async {
-    var url = Uri.http(URL(), 'get-products/');
-    var response = await http.get(url);
-    // var result = json.decode(response.body);
-    var result = utf8.decode(response.bodyBytes);
-    setState(() {
-      _products = json.decode(result);
-      print(_products);
-    });
+                      showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                            title: const Text('Order'),
+                            content:
+                                const Text('คุณสั่งซื้อสินค้าเรียบร้อยแล้ว'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return buttomBar();
+                                    },
+                                  ),
+                                ),
+                                child: const Text('OK'),
+                              ),
+                            ]),
+                      );
+                    }
+                  },
+                  child: Text("Confirm"))
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 130),
+              //   child: ElevatedButton(
+              //     style: const ButtonStyle(
+              //       backgroundColor: MaterialStatePropertyAll<Color>(
+              //           Color.fromARGB(255, 3, 68, 121)),
+              //     ),
+              //     onPressed: () {
+              //       post_ctm_order();
+              //       setState(() {});
+              //     },
+              //     child: const Text('Confirm'),
+              //   ),
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 80),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.end,
+              //     children: [
+              //       Directionality(
+              //         textDirection: TextDirection.rtl,
+              //         child: ElevatedButton.icon(
+              //           style: ButtonStyle(
+              //               backgroundColor: MaterialStatePropertyAll<Color>(
+              //                   Color.fromARGB(255, 3, 68, 121))),
+              //           onPressed: () {
+              //             post_ctm_order();
+              //               showDialog<String>(
+              //                 context: context,
+              //                 builder: (BuildContext context) => AlertDialog(
+              //                     title: const Text('Make Payment'),
+              //                     content: const Text('กรุณาชำระเงิน'),
+              //                     actions: <Widget>[
+              //                       TextButton(
+              //                         onPressed: () {
+              //                           Navigator.push(
+              //                               context,
+              //                               MaterialPageRoute(
+              //                                   builder: (context) => Banking()));
+              //                         },
+              //                         child: const Text('OK'),
+              //                       ),
+              //                     ]),
+              //               );
+              //           },
+              //           icon: Icon(
+              //             Icons.payment,
+              //             color: Colors.white,
+              //           ),
+              //           label: Text("Confirm"),
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // ),
+            ])));
   }
 
   Future post_ctm_order() async {
     // var url = Uri.https('abcd.ngrok.io', '/api/post-todolist');
-    var url = Uri.http(URL(), 'post_ctm_order/id');
+    var url = Uri.http(URL(), 'post_ctm_order');
     Map<String, String> header = {"Content-type": "application/json"};
-    String v1 = '"nproduct":"${_nproduct.text}"';
-    String v2 = '"selling_price":"${_sellPrice.text}"';
-    String v3 = '"amount":"${_amount.text}"';
-    String v4 = '"sum_price":"${total}"';
+
+    String v1 = '"idproduct":"${_idpd}"';
+    String v2 = '"idcustomer":"${idcus()}"';
+    String v3 = '"amount":"${_amount}"';
+    String v4 = '"total":"${total}"';
     String jsondata = '{$v1,$v2,$v3,$v4}';
     var response = await http.post(url, headers: header, body: jsondata);
     print('--------result--------');

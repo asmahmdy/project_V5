@@ -3,6 +3,7 @@ import 'package:myapp/components/my_api.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:myapp/pages/confirm_cart.dart';
 import 'package:myapp/pages/product_details_screens.dart';
 
 // import 'package:myapp/pages/profile_screen.dart';
@@ -24,6 +25,7 @@ class _showProductState extends State<showProduct> {
     super.initState();
     getProducts();
     get_profile();
+    post_ctm_cart();
   }
 
   @override
@@ -32,30 +34,41 @@ class _showProductState extends State<showProduct> {
       appBar: AppBar(
         title: Text("Shop"),
         backgroundColor: Color.fromRGBO(11, 74, 126, 1),
+        automaticallyImplyLeading: false,
+
+        actions: [
+          IconButton(
+            icon: Icon(Icons.shopping_cart), // You can use any icon you prefer
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ConfirmCart()));
+            },
+          ),
+        ],
         // actions: <Widget>[
-        //   Padding(
-        //       padding: EdgeInsets.only(left: 320.0),
-        //       child: GestureDetector(
-        //         onTap: () {
-        //           Navigator.of(context).push(MaterialPageRoute(
-        //               builder: (context) => ProfileScreen()));
+        //   PopupMenuButton<int>(
+        //     icon: Icon(Icons.person), // Add an icon for the popup menu
+        //     onSelected: (int index) {
+        //       // Handle the selection here
+        //       print('Selected: ${_getProfile[index]['username']}');
+        //     },
+        //     itemBuilder: (BuildContext context) {
+        //       return List<PopupMenuEntry<int>>.generate(
+        //         _getProfile.length,
+        //         (int index) {
+        //           return PopupMenuItem<int>(
+        //             value: index,
+        //             child: Text('${_getProfile[index]['username']}'),
+        //             onTap: () {
+        //               Navigator.of(context).push(MaterialPageRoute(
+        //                   builder: (context) => ProfileScreen()));
+        //             },
+        //           );
         //         },
-        //         child: Icon(
-        //           Icons.person_2,
-        //           size: 26.0,
-        //         ),
-        //       )),
-        //   Padding(
-        //       padding: const EdgeInsets.only(top: 20, right: 20),
-        //       child: ListView.builder(
-        //           itemCount: _getProfile.length,
-        //           itemBuilder: (context, index) {
-        //             return Text(
-        //               '${_getProfile[index]['username']}',
-        //               style: TextStyle(fontSize: 16),
-        //             );
-        //           }))
-        // ]
+        //       );
+        //     },
+        //   ),
+        // ],
       ),
       body: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -74,6 +87,7 @@ class _showProductState extends State<showProduct> {
                         sellPrice: _products[index]['selling_price'],
                         image: 'http://${URL()}/${_products[index]['image']}',
                         description: _products[index]['description'],
+                        id: _products[index]['id'],
                       )),
             );
           },
@@ -119,12 +133,23 @@ class _showProductState extends State<showProduct> {
   }
 
   Future get_profile() async {
-    var url = Uri.http(URL(), 'get-profile/${idcus()}/');
+    var url = Uri.http(URL(), 'get-profile/${idcus()}');
     var response = await http.get(url);
     var result = utf8.decode(response.bodyBytes);
     setState(() {
       _getProfile = json.decode(result);
       print(_getProfile);
     });
+  }
+
+  Future post_ctm_cart() async {
+    // var url = Uri.https('abcd.ngrok.io', '/api/post-todolist');
+    var url = Uri.http(URL(), 'post_ctm_cart');
+    Map<String, String> header = {"Content-type": "application/json"};
+    String v1 = '"idcustomer":"${idcus()}"';
+    String jsondata = '{$v1}';
+    var response = await http.post(url, headers: header, body: jsondata);
+    print('--------result--------');
+    print(response.body);
   }
 }

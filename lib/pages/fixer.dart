@@ -16,6 +16,9 @@ class _FixerPageState extends State<FixerPage> {
   final _time = TextEditingController();
   final _detail = TextEditingController();
   final _process = TextEditingController();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,78 +28,143 @@ class _FixerPageState extends State<FixerPage> {
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(25),
-                child: TextField(
-                  controller: _ndevice,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Name Device : "),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(25),
+                  child: TextFormField(
+                    controller: _ndevice,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Name Device : "),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกข้อมูล'; // Error message if data is empty
+                      }
+                      return null; // No error
+                    },
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(25),
-                child: TextField(
-                  controller: _brand,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: "Brand : "),
+                Padding(
+                  padding: EdgeInsets.all(25),
+                  child: TextFormField(
+                    controller: _brand,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: "Brand : "),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกข้อมูล'; // Error message if data is empty
+                      }
+                      return null; // No error
+                    },
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(25),
-                child: TextField(
-                  controller: _problem,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: "Problem : "),
+                Padding(
+                  padding: EdgeInsets.all(25),
+                  child: TextFormField(
+                    controller: _problem,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: "Problem : "),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกข้อมูล'; // Error message if data is empty
+                      }
+                      return null; // No error
+                    },
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(25),
-                child: TextField(
-                  controller: _date,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: "Date : ว/ด/ป"),
+                Padding(
+                  padding: EdgeInsets.all(25),
+                  child: TextFormField(
+                    controller: _date,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Date : ว/ด/ป"),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกข้อมูล'; // Error message if data is empty
+                      }
+                      return null; // No error
+                    },
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(25),
-                child: TextField(
-                  controller: _time,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: "Time : "),
+                Padding(
+                  padding: EdgeInsets.all(25),
+                  child: TextFormField(
+                    controller: _time,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: "Time : "),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกข้อมูล'; // Error message if data is empty
+                      }
+                      return null; // No error
+                    },
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(25),
-                child: TextField(
-                  maxLines: 3,
-                  controller: _detail,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: "Detail : "),
+                Padding(
+                  padding: EdgeInsets.all(25),
+                  child: TextFormField(
+                    maxLines: 3,
+                    controller: _detail,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: "Detail : "),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกข้อมูล'; // Error message if data is empty
+                      }
+                      return null; // No error
+                    },
+                  ),
                 ),
-              ),
-              ElevatedButton(
+                ElevatedButton(
                   style: const ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll<Color>(
                         Color.fromARGB(255, 3, 68, 121)),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
+                    if (_formKey.currentState!.validate()) {
+                      // Form is valid, navigate to the next screen
+                      Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => FixerC(
-                              ndevice: _ndevice.text,
-                              brand: _brand.text,
-                              problem: _problem.text,
-                              date: _date.text,
-                              time: _time.text,
-                              detail: _detail.text,
-                              process: _process.text,
-                            )));
+                          ndevice: _ndevice.text,
+                          brand: _brand.text,
+                          problem: _problem.text,
+                          date: _date.text,
+                          time: _time.text,
+                          detail: _detail.text,
+                          process: _process.text,
+                        ),
+                      ));
+                    }
                   },
-                  child: Text("Send"))
-            ],
+                  child: Text('Next'),
+                )
+
+                // ElevatedButton(
+                //     style: const ButtonStyle(
+                //       backgroundColor: MaterialStatePropertyAll<Color>(
+                //           Color.fromARGB(255, 3, 68, 121)),
+                //     ),
+                //     onPressed: () {
+                //       _formKey.currentState!.validate();
+                //       Navigator.of(context).push(MaterialPageRoute(
+                //           builder: (context) => FixerC(
+                //                 ndevice: _ndevice.text,
+                //                 brand: _brand.text,
+                //                 problem: _problem.text,
+                //                 date: _date.text,
+                //                 time: _time.text,
+                //                 detail: _detail.text,
+                //                 process: _process.text,
+                //               )));
+                //     },
+                //     child: Text("Send"))
+              ],
+            ),
           ),
         ),
       ),

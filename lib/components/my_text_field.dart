@@ -34,3 +34,30 @@ class MyTextField extends StatelessWidget {
 class myText {
   final size = TextStyle(fontSize: 18);
 }
+
+class MyTextFormField extends StatelessWidget {
+  final TextEditingController controller;
+
+  final Function(String?) validator;
+
+  const MyTextFormField({
+    Key? key,
+    required this.controller,
+    required this.validator,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+          border: OutlineInputBorder(), labelText: "Name Device : "),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your name';
+        }
+        return null;
+      },
+    );
+  }
+}

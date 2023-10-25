@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/message.dart';
-
 import 'package:myapp/pages/profile_screen.dart';
-
 import '../pages/fix_detail.dart';
-
 import '../pages/shop_page.dart';
 
 class buttomBar extends StatefulWidget {
-  const buttomBar({super.key});
+  const buttomBar({
+    super.key,
+  });
 
   @override
   State<buttomBar> createState() => _buttomBarState();
@@ -16,6 +15,7 @@ class buttomBar extends StatefulWidget {
 
 class _buttomBarState extends State<buttomBar> {
   int _selectedIndex = 0;
+
   static TextStyle get optionStyle =>
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 

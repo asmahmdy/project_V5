@@ -1,55 +1,65 @@
-import 'package:flutter/material.dart';
-import 'package:myapp/pages/confirm_order.dart';
+import 'dart:convert';
 
-class OrderScreen extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:myapp/components/buttom_nav_bar.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import '../components/my_api.dart';
+
+class CartPage extends StatefulWidget {
   final String nproduct;
   final String image;
   final int sellPrice;
   final int id;
-  const OrderScreen({
-    super.key,
-    required this.nproduct,
-    required this.image,
-    required this.sellPrice,
-    required this.id,
-  });
+  const CartPage(
+      {super.key,
+      required this.nproduct,
+      required this.image,
+      required this.sellPrice,
+      required this.id});
 
   @override
-  State<OrderScreen> createState() => _OrderScreenState();
+  State<CartPage> createState() => _CartPageState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _CartPageState extends State<CartPage> {
   final _amount = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  var v1, v2, v3, v4;
+  var _nproduct, _image, _sellPrice, _id;
+
+  double sumprice = 0.0;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    v1 = widget.nproduct;
-    v2 = widget.image;
-    v3 = widget.sellPrice;
-    v4 = widget.id;
+    _nproduct = widget.nproduct;
+    _image = widget.image;
+    _sellPrice = widget.sellPrice;
+    _id = widget.id;
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Order Product"),
+        title: const Text("Shopping Cart"),
         backgroundColor: Color.fromRGBO(11, 74, 126, 1),
       ),
       body: Padding(
         padding: const EdgeInsets.all(18),
         child: ListView(children: [
-          Container(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+          Card(
+            child: Container(
               child: Row(children: [
-                Image.network(
-                  "${widget.image}",
-                  fit: BoxFit.fill,
-                  height: 150,
-                  width: 150,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    "${_image}",
+                    fit: BoxFit.fill,
+                    height: 150,
+                    width: 150,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
@@ -58,8 +68,8 @@ class _OrderScreenState extends State<OrderScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.nproduct),
-                      Text('Selling Price : ${widget.sellPrice} ฿'),
+                      Text(_nproduct),
+                      Text('Selling Price : ${_sellPrice}'),
                       SizedBox(
                         height: 40,
                       ),
@@ -78,9 +88,9 @@ class _OrderScreenState extends State<OrderScreen> {
                                   labelText: "Amount : "),
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return 'กรุณากรอกข้อมูล'; // Error message if data is empty
+                                  return 'กรุณากรอกข้อมูล';
                                 }
-                                return null; // No error
+                                return null;
                               },
                             ),
                           ),
@@ -109,20 +119,15 @@ class _OrderScreenState extends State<OrderScreen> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ConfirmOrder(
-                                  nproduct: v1,
-                                  image: v2,
-                                  sellPrice: v3,
-                                  amount: int.parse(_amount.text),
-                                  idproduct: v4,
-                                )));
+                            builder: (context) => buttomBar()));
                       }
+                      postCtmOrderDetail();
                     },
                     icon: Icon(
-                      Icons.shopping_bag,
+                      Icons.shopping_cart,
                       color: Colors.white,
                     ),
-                    label: Text("Order"),
+                    label: Text("Add to Cart"),
                   ),
                 )
               ],
@@ -131,5 +136,27 @@ class _OrderScreenState extends State<OrderScreen> {
         ]),
       ),
     );
+  }
+
+  Future postCtmOrderDetail() async {
+    final url = Uri.http(URL(), 'post_ctm_order_datail');
+    final headers = {"Content-type": "application/json"};
+    setState(() {
+      double amount = double.tryParse(_amount.text) ?? 0;
+      sumprice = _sellPrice * amount;
+    });
+    final data = {
+      "idproduct": _id.toString(),
+      "idcustomer": idcus().toString(),
+      "amount": int.tryParse(_amount.text) ?? 0,
+      "sum_price": sumprice.toStringAsFixed(2),
+      // "idorder": idorder.toString(),
+    };
+
+    final response =
+        await http.post(url, headers: headers, body: jsonEncode(data));
+
+    print('--------result--------');
+    print(response.body);
   }
 }

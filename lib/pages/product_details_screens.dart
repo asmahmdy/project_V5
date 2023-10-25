@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/pages/cart_page.dart';
 import 'package:myapp/pages/order_screen.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'cart_screen.dart';
+
 import 'package:myapp/components/my_api.dart';
 
 class ProductDetailsScreens extends StatefulWidget {
@@ -11,6 +12,7 @@ class ProductDetailsScreens extends StatefulWidget {
   final String image;
   final int sellPrice;
   final String description;
+  final int id;
 
   ProductDetailsScreens({
     super.key,
@@ -18,6 +20,7 @@ class ProductDetailsScreens extends StatefulWidget {
     required this.image,
     required this.sellPrice,
     required this.description,
+    required this.id,
   });
 
   @override
@@ -26,7 +29,7 @@ class ProductDetailsScreens extends StatefulWidget {
 
 class _ProductDetailsScreensState extends State<ProductDetailsScreens> {
   List _products = [];
-  var v1, v2, v3, v4;
+  var v1, v2, v3, v4, v5;
   @override
   void initState() {
     // TODO: implement initState
@@ -35,6 +38,7 @@ class _ProductDetailsScreensState extends State<ProductDetailsScreens> {
     v2 = widget.image;
     v3 = widget.sellPrice;
     v4 = widget.description;
+    v5 = widget.id;
   }
 
   @override
@@ -48,9 +52,12 @@ class _ProductDetailsScreensState extends State<ProductDetailsScreens> {
           padding: const EdgeInsets.all(15),
           child: ListView(
             children: [
-              Image.network(
-                "${widget.image}",
-                fit: BoxFit.fill,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  "${widget.image}",
+                  fit: BoxFit.fill,
+                ),
               ),
               SizedBox(
                 height: 20,
@@ -58,8 +65,13 @@ class _ProductDetailsScreensState extends State<ProductDetailsScreens> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(widget.nproduct),
-                  Text('Selling Price : ${widget.sellPrice} ฿'),
+                  Text(widget.nproduct,
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text('Selling Price : ${widget.sellPrice} ฿',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               SizedBox(
@@ -75,9 +87,14 @@ class _ProductDetailsScreensState extends State<ProductDetailsScreens> {
                   Directionality(
                       textDirection: TextDirection.rtl,
                       child: ElevatedButton.icon(
-                        onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const CartScreen())),
+                        onPressed: () =>
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => CartPage(
+                                      nproduct: v1,
+                                      image: v2,
+                                      sellPrice: v3,
+                                      id: v5,
+                                    ))),
                         icon: Icon(
                           Icons.shopping_cart,
                           color: Colors.white,
@@ -94,6 +111,7 @@ class _ProductDetailsScreensState extends State<ProductDetailsScreens> {
                                   nproduct: v1,
                                   image: v2,
                                   sellPrice: v3,
+                                  id: v5,
                                 ))),
                     icon: Icon(
                       Icons.shopping_bag_rounded,
